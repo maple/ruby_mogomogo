@@ -5,22 +5,20 @@ require 'time'
 def updateTimestampFromNameofDropbox (name:, ext:)
 
   s = File.stat(name)
-  p s.atime # latest accessed time.
-  p s.mtime # latest updated time.
+  # p s.mtime # latest updated time.
 
   at = s.atime
 
   ## remove extention & replace words.
   mtimesrc = name.dup
-  p mtimesrc
   mtimesrc.slice!(/[\w\s\d\/]+\//)
   mtimesrc.slice!("." + ext)
   mtimesrc.gsub!(".", ":")
-  p mtimesrc
+  #p mtimesrc
   mt = Time.parse(mtimesrc)
 
-  p at
-  p mt
+  #p at
+  #p mt
 
   File::utime(at, mt, name)
 end
