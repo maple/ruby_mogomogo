@@ -1,4 +1,4 @@
-#!/home/masayuki/.rbenv/shims/ruby
+#!~/.rbenv/shims/ruby
 
 require 'time'
 
