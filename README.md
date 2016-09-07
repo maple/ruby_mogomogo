@@ -1,2 +1,2 @@
-# ruby_mogomogo
-test script for private.
+# ruby_tools
+test script for small projects.
