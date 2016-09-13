@@ -4,19 +4,26 @@
 # gem install exifr
 require 'exifr'
 
+def get_info_fromExif (name:, tagname:)
+  @exif = EXIFR::JPEG.new(name)  
+  # puts @exif.model
+  return @exif.send(tagname)
+end
+
+
+def updateTimestampFromExif (name:, ext: "" )
+  s = File.stat(name)
+  # p s.mtime # latest updated time.
+  at = s.atime
+  mt = get_info_fromExif(name: name, tagname: "date_time_original")
+  p mt
+  File::utime(at, mt, name)
+end
+
 photoname = "IMG_20150807_162949.jpg"
 photoname = "2014-01-08 16.23.23.jpg"
 
-@exif = EXIFR::JPEG.new(photoname)
+updateTimestampFromExif(name: photoname)
 
-p photoname
-# camera device name
-puts @exif.model
+exit
 
-# the date when the photo was taken.
-puts @exif.date_time_original
-
-
-# the aspect of the pixel range
-puts @exif.pixel_x_dimension
-puts @exif.pixel_y_dimension
