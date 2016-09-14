@@ -46,8 +46,12 @@ def updateTimestampFromExif (name:, ext: "" )
   # p s.mtime # latest updated time.
   at = s.atime
   mt = get_info_fromExif(name: name, tagname: "date_time_original")
-  p mt.class
-  #File::utime(at, mt, name)
+  
+  if mt.instance_of?(Time) then
+    File::utime(at, mt, name)
+  else
+    p "this file doesn't include Exif header."
+  end
 end
 
 
@@ -71,9 +75,10 @@ filelist = create_filename_list param_of_search
 
 filelist.each { |f|
   p f
-  # verify the file type of file.
-  if get_image_extension(f) == "jpg" then
+  if get_image_extension(f) == ext then
     updateTimestampFromExif name: f
+  else
+    p "filetype is not #{ext}"
   end
 }
 
