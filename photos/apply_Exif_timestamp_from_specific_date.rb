@@ -48,5 +48,6 @@ localtime = Time.parse(date)
 
 filelist.each { |f|
   set_timestamp_to_exiftags file:f, time: localtime
+  File::utime(localtime, localtime, f)
   localtime = localtime + 10
 }
