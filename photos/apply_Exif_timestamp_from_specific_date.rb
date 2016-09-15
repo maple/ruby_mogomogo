@@ -20,8 +20,6 @@ def set_timestamp_to_exiftags (time: , file: )
   end
 end
 
-
-
 # create filelist
 
 def create_filename_list (param)
@@ -34,20 +32,9 @@ def create_filename_list (param)
   return ar
 end
 
-
-# apply timestamp & increment 1 min each
-
-def addTimeto1min (time:)
-  time = "201601011301"
-  idate =  (time.to_i + 1).to_s
-  p idate.class
-  p idate 
-  Time.parse(idate)
-end
-
 # set start time.
-date = "201601011210"
-
+ARGV[1] ? date = ARGV[1] : date = "201601011200"
+  
 # extension
 ext = "jpg"
 location = Dir::pwd
