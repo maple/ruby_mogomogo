@@ -21,12 +21,6 @@ def set_timestamp_to_exiftags (time: , file: )
 end
 
 
-# set start time.
-date = "201607011210"
-fname = "hoge.jpg"
-# format Time class
-begintime = Time.parse(date)
-
 
 # create filelist
 
@@ -43,6 +37,17 @@ end
 
 # apply timestamp & increment 1 min each
 
+def addTimeto1min (time:)
+  time = "201601011301"
+  idate =  (time.to_i + 1).to_s
+  p idate.class
+  p idate 
+  Time.parse(idate)
+end
+
+# set start time.
+date = "201601011210"
+
 # extension
 ext = "jpg"
 location = Dir::pwd
@@ -52,6 +57,9 @@ param_of_search = location + "/**/*" + ext
 
 filelist = create_filename_list param_of_search
 
+localtime = Time.parse(date)
+
 filelist.each { |f|
-  set_timestamp_to_exiftags file:f, time:begintime
+  set_timestamp_to_exiftags file:f, time: localtime
+  localtime = localtime + 10
 }
