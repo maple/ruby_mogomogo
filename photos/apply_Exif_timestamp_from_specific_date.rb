@@ -1,15 +1,25 @@
 #!~/.rbenv/shims/ruby
-
 ### ---------------------------------
 # need to install gem of mini_exiftool & exiftool
 # 
 # gem install mini_exiftool
+#
+## usage:
+# $ ruby apply_Exif_timestamp_from_specific_date.rb [time]
+# if user doesn't put argument as a date, this program uses current time.
+#
+## background
+# I have a lot of scan data to keep my memory as digital data.
+# such as photos of paper, pictures my children drew, brochure of a traveling and so on.
+# I noticed I'm almost forgetting when I took these photos, when my son drew or when my family has visited that place of the brochure.
+# To keep information of timestamp will help me in the future, therefore I've written this code. ;)
+#
 
 require "mini_exiftool"
 
 def set_timestamp_to_exiftags (time: , file: )
   photo = MiniExiftool.new file.to_s
-  p photo.date_time_original
+  # p photo.date_time_original
   photo.date_time_original = time
 
   begin
@@ -33,8 +43,8 @@ def create_filename_list (param)
 end
 
 # set start time.
-ARGV[1] ? date = ARGV[1] : date = "201601011200"
-  
+ARGV[0] ? date = ARGV[0] : date = Time.now.to_s
+
 # extension
 ext = "jpg"
 location = Dir::pwd
