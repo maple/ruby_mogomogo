@@ -3,6 +3,7 @@
 # need to install gem of mini_exiftool & exiftool
 # 
 # gem install mini_exiftool
+#   Also install exiftool http://www.sno.phy.queensu.ca/~phil/exiftool/
 #
 ## usage:
 # $ ruby apply_Exif_timestamp_from_specific_date.rb [time]
