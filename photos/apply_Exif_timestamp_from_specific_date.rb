@@ -22,8 +22,8 @@ def set_timestamp_to_exiftags (time: , file: )
   photo = MiniExiftool.new file.to_s
   # p photo.date_time_original
   photo.date_time_original = time
-  photo.date_time = time
-  photo.date_time_digitized = time
+  photo.modify_date = time  # date time
+  photo.create_date = time  # date time digitized
 
   begin
     photo.save!
