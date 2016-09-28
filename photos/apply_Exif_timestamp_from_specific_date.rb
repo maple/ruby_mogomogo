@@ -21,6 +21,8 @@ def set_timestamp_to_exiftags (time: , file: )
   photo = MiniExiftool.new file.to_s
   # p photo.date_time_original
   photo.date_time_original = time
+  photo.date_time = time
+  photo.date_time_digitized = time
 
   begin
     photo.save!
@@ -34,7 +36,12 @@ end
 
 def create_filename_list (param)
   ar = []
-  Dir::glob(param){|f|
+  Dir::glob(param.upcase){|f|
+    next unless FileTest.file?(f)
+    #ar << "#{File.basename(f)} : #{File::stat(f).size}"
+    ar << f
+  }
+  Dir::glob(param.capitalize){|f|
     next unless FileTest.file?(f)
     #ar << "#{File.basename(f)} : #{File::stat(f).size}"
     ar << f
