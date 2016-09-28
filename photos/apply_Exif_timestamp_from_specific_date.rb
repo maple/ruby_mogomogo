@@ -37,6 +37,7 @@ end
 
 def create_filename_list (param)
   ar = []
+  # Dir class support upcase & lowercase letter on ruby v2.2. i.e: jpg, JPG.
   Dir::glob(param){|f|
     next unless FileTest.file?(f)
     #ar << "#{File.basename(f)} : #{File::stat(f).size}"
