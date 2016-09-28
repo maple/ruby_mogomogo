@@ -29,7 +29,7 @@ def set_timestamp_to_exiftags (time: , file: )
   # apply image size
   photo.exif_image_width = photo.image_width
   photo.exif_image_height = photo.image_height
-
+  
   begin
     photo.save!
     puts "done to rewrite exif timestamp : (#{file})"
@@ -50,6 +50,7 @@ def create_filename_list (param)
   return ar
 end
 
+
 # set start time.
 ARGV[0] ? date = ARGV[0] : date = Time.now.to_s
 
@@ -60,7 +61,7 @@ location = Dir::pwd
 # pick up files
 param_of_search = location + "/**/*" + ext
 
-p param_of_search
+
 filelist = create_filename_list param_of_search
 
 localtime = Time.parse(date)
