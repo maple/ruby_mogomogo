@@ -21,6 +21,7 @@
 #
 
 require "mini_exiftool"
+require 'rmagick'
 
 def set_timestamp_to_exiftags (time: , file: , width:, height: )
   photo = MiniExiftool.new file.to_s
@@ -29,6 +30,12 @@ def set_timestamp_to_exiftags (time: , file: , width:, height: )
   photo.date_time = time
   photo.date_time_digitized = time
 
+  # # for dubug
+  # p photo.exif_image_width
+  # p photo.exif_image_height
+  # p photo.image_width
+  # p photo.image_height
+  
   begin
     photo.save!
     puts "done to rewrite exif timestamp : (#{file})"
@@ -41,34 +48,43 @@ end
 
 def create_filename_list (param)
   ar = []
-  Dir::glob(param.upcase){|f|
+  Dir::glob(param){|f|
     next unless FileTest.file?(f)
     #ar << "#{File.basename(f)} : #{File::stat(f).size}"
     ar << f
   }
-  Dir::glob(param.capitalize){|f|
-    next unless FileTest.file?(f)
-    ar << f
-  }
   return ar
+end
+
+# return pixel info of jpeg image.
+
+# return width/height of image.
+def get_width_height (imagefile)
+  p imagefile
+  img = Magick::Image.read(imagefile).first
+  return img.columns, img.rows # width, height
 end
 
 # set start time.
 ARGV[0] ? date = ARGV[0] : date = Time.now.to_s
 
 # extension
-ext = "jpg"
+ext = ".jpg"
 location = Dir::pwd
 
 # pick up files
 param_of_search = location + "/**/*" + ext
+#param_of_search = location + "/**/*" + "[(#{ext.capitalize})|(#{ext.upcase})]"
 
+p param_of_search
 filelist = create_filename_list param_of_search
 
 localtime = Time.parse(date)
 
 filelist.each { |f|
-  set_timestamp_to_exiftags file:f, time: localtime, width: 0, height: 0
+  i_width, i_height = get_width_height(f)
+  p i_width, i_height
+  set_timestamp_to_exiftags file:f, time: localtime, width: i_width, height: i_height
   File::utime(localtime, localtime, f)
   localtime = localtime + 10
 }
