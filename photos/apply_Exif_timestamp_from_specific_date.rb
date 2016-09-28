@@ -37,12 +37,7 @@ end
 
 def create_filename_list (param)
   ar = []
-  Dir::glob(param.upcase){|f|
-    next unless FileTest.file?(f)
-    #ar << "#{File.basename(f)} : #{File::stat(f).size}"
-    ar << f
-  }
-  Dir::glob(param.capitalize){|f|
+  Dir::glob(param){|f|
     next unless FileTest.file?(f)
     #ar << "#{File.basename(f)} : #{File::stat(f).size}"
     ar << f
