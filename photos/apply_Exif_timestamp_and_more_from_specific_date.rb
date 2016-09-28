@@ -3,10 +3,7 @@
 # need to install gem of mini_exiftool & exiftool & others.
 # 
 # gem install mini_exiftool
-#   Also install exiftool http://www.sno.phy.queensu.ca/~phil/exiftool/
-# gem install rmagick
-#    Also you need to install ImageMagick. Such as "brew install imagemagick"
-#
+#   Also install exiftool from http://www.sno.phy.queensu.ca/~phil/exiftool/
 #
 ## usage:
 # $ ruby apply_Exif_timestamp_from_specific_date.rb [time]
@@ -22,12 +19,16 @@
 
 require "mini_exiftool"
 
-def set_timestamp_to_exiftags (time: , file: , width:, height: )
+def set_timestamp_to_exiftags (time: , file: )
   photo = MiniExiftool.new file.to_s
   # p photo.date_time_original
   photo.date_time_original = time
-  photo.date_time = time
-  photo.date_time_digitized = time
+  photo.modify_date = time  # date time
+  photo.create_date = time  # date time digitized
+
+  # apply image size
+  photo.exif_image_width = photo.image_width
+  photo.exif_image_height = photo.image_height
 
   begin
     photo.save!
@@ -41,13 +42,9 @@ end
 
 def create_filename_list (param)
   ar = []
-  Dir::glob(param.upcase){|f|
+  Dir::glob(param){|f|
     next unless FileTest.file?(f)
     #ar << "#{File.basename(f)} : #{File::stat(f).size}"
-    ar << f
-  }
-  Dir::glob(param.capitalize){|f|
-    next unless FileTest.file?(f)
     ar << f
   }
   return ar
@@ -57,18 +54,19 @@ end
 ARGV[0] ? date = ARGV[0] : date = Time.now.to_s
 
 # extension
-ext = "jpg"
+ext = ".jpg"
 location = Dir::pwd
 
 # pick up files
 param_of_search = location + "/**/*" + ext
 
+p param_of_search
 filelist = create_filename_list param_of_search
 
 localtime = Time.parse(date)
 
 filelist.each { |f|
-  set_timestamp_to_exiftags file:f, time: localtime, width: 0, height: 0
+  set_timestamp_to_exiftags file:f, time: localtime
   File::utime(localtime, localtime, f)
   localtime = localtime + 10
 }
