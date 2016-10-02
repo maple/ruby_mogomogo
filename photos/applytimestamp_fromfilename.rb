@@ -39,7 +39,7 @@ end
 # get current directory
 
 # extension
-ext = "jpg"
+ext = ".jpg"
 
 location = Dir::pwd
 
