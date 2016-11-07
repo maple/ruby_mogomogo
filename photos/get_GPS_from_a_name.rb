@@ -16,15 +16,20 @@
 #
 # for HTTP GET
 # usr typhoeus / net-http / open-uri
+#
+# to handle JSON
+# jq is better.
+
 
 require 'net/http'
 require 'uri'
 
+require 'json'
 
 key = "your api key"
 address = "Imperial Palace"
-ARGV[0] ? address = ARGV[0] : address
-ARGV[1] ? key = ARGV[1] : key
+ARGV[0] ? key = ARGV[0] : key
+ARGV[1] ? address = ARGV[1] : address
 
 def show_usage
   p "Need parameters placename & apikey"
@@ -44,5 +49,10 @@ p params
 uri = URI.parse("https://maps.googleapis.com/maps/api/geocode/json?#{params}")
 response = Net::HTTP.get_response(uri)
 
-p response.body
+# p response.body
 
+json_data = JSON.parse(response.body)
+#p json_data.class
+p json_data['results'][0]['formatted_address']
+p json_data['results'][0]['geometry']['location']["lat"]
+p json_data['results'][0]['geometry']['location']["lng"]
