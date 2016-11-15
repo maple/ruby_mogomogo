@@ -49,10 +49,11 @@ p params
 uri = URI.parse("https://maps.googleapis.com/maps/api/geocode/json?#{params}")
 response = Net::HTTP.get_response(uri)
 
-# p response.body
+p response.body
 
 json_data = JSON.parse(response.body)
 #p json_data.class
+
 p json_data['results'][0]['formatted_address']
 p json_data['results'][0]['geometry']['location']["lat"]
 p json_data['results'][0]['geometry']['location']["lng"]

@@ -68,10 +68,11 @@ def set_timestamp_to_exiftags (time: , file: )
   p "Version ==============================--"
   p photo.GPS_Version_ID
   p photo.gps_latitude
-  p photo.gps_latitude_Ref
+  p photo.gps_latitude_ref
+  photo.gps_latitude_ref = "North" # base on Japan
   p photo.gps_longitude
-  p photo.gps_longitude_Ref
-
+  p photo.gps_longitude_ref
+  photo.gps_longitude_ref = "E" # base on Japan
   return
   begin
     photo.save!
