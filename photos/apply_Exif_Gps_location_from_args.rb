@@ -65,10 +65,14 @@ def set_timestamp_to_exiftags (time: , file: )
   # photo.date_time_original = time
   # photo.modify_date = time  # date time
   # photo.create_date = time  # date time digitized
+  p "Version ==============================--"
+  p photo.GPS_Version_ID
   p photo.gps_latitude
+  p photo.gps_latitude_Ref
   p photo.gps_longitude
+  p photo.gps_longitude_Ref
 
-  exit
+  return
   begin
     photo.save!
     puts "done to rewrite exif timestamp : (#{file})"
@@ -81,10 +85,8 @@ end
 
 def create_filename_list (param)
   ar = []
-  # Dir class support upcase & lowercase letter on ruby v2.2. i.e: jpg, JPG.
-  Dir::glob(param){|f|
+  Dir::glob(param, File::FNM_CASEFOLD){|f|
     next unless FileTest.file?(f)
-    #ar << "#{File.basename(f)} : #{File::stat(f).size}"
     ar << f
   }
   return ar
@@ -95,7 +97,7 @@ end
 ARGV[3] ? date = ARGV[0] : date = Time.now.to_s
 
 # extension
-ext = "jpg"
+ext = ".jpg"
 location = Dir::pwd
 
 # pick up files
