@@ -9,8 +9,7 @@
 # 2,500 free requests / day & 50 req / sec
 #
 # how to get API key.
-# URL:
-# API key name:
+# URL on google:
 #
 # URL encoding:
 #
@@ -22,18 +21,21 @@
 
 require 'net/http'
 require 'uri'
+require "mini_exiftool"
 
 require 'json'
 
 key = "your api key"
 address = "Imperial Palace"
-ARGV[0] ? key = ARGV[0] : key
-ARGV[1] ? address = ARGV[1] : address
+
+
+ARGV[0] ? address = ARGV[0] : address
+ARGV[1] ? key = ARGV[1] : key
 
 def show_usage
-  p "Need parameters placename & apikey"
-  p "or change variable \"key\" to your key."
-  p "$ #{$0} place_name apikey"
+  printf "Need parameters placename & apikey"
+  puts "or rewrite variable \"key\" to your key."
+  puts "$ #{$0} \[place_name\] \[apikey\]"
 end
 
 if key == "your api key" then
@@ -51,32 +53,23 @@ response = Net::HTTP.get_response(uri)
 # p response.body
 
 json_data = JSON.parse(response.body)
-#p json_data.class
-p json_data['results'][0]['formatted_address']
-p json_data['results'][0]['geometry']['location']["lat"]
-p json_data['results'][0]['geometry']['location']["lng"]
+p json_data['results'][0]['formatted_address']      # for debug
+lat = json_data['results'][0]['geometry']['location']["lat"]
+lng = json_data['results'][0]['geometry']['location']["lng"]
 
+p "lat = (#{lat})" 
+p "lng = (#{lng})" 
 
-require "mini_exiftool"
-
-def set_timestamp_to_exiftags (time: , file: )
+def set_location_info_to_exiftags (lat: , lng: , file: )
   photo = MiniExiftool.new file.to_s
-  # p photo.date_time_original
-  # photo.date_time_original = time
-  # photo.modify_date = time  # date time
-  # photo.create_date = time  # date time digitized
-  p "Version ==============================--"
-  p photo.GPS_Version_ID
-  p photo.gps_latitude
-  p photo.gps_latitude_ref
+  photo.gps_latitude = lat
   photo.gps_latitude_ref = "North" # base on Japan
-  p photo.gps_longitude
-  p photo.gps_longitude_ref
+  photo.gps_longitude = lng
   photo.gps_longitude_ref = "E" # base on Japan
-  return
+
   begin
     photo.save!
-    puts "done to rewrite exif timestamp : (#{file})"
+    puts "done to rewrite exif for location : (#{file})"
   rescue => e
     puts e
   end
@@ -93,10 +86,6 @@ def create_filename_list (param)
   return ar
 end
 
-
-# set start time.
-ARGV[3] ? date = ARGV[0] : date = Time.now.to_s
-
 # extension
 ext = ".jpg"
 location = Dir::pwd
@@ -106,10 +95,9 @@ param_of_search = location + "/**/*" + ext
 
 filelist = create_filename_list param_of_search
 
-localtime = Time.parse(date)
-
 filelist.each { |f|
-  set_timestamp_to_exiftags file:f, time: localtime
-  File::utime(localtime, localtime, f)
-  localtime = localtime + 10
+  # keep a time stamp of the file.
+  origintime = File.stat(f).mtime
+  set_location_info_to_exiftags lat: lat, lng: lng, file:f
+  File::utime(origintime, origintime, f) 
 }
