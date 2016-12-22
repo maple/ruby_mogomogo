@@ -60,6 +60,24 @@ lng = json_data['results'][0]['geometry']['location']["lng"]
 p "lat = (#{lat})" 
 p "lng = (#{lng})" 
 
+
+# make sure whether  the procedure should go forward or not.
+loop do
+  p "Do you want to continue ? Y/n."
+  line = STDIN.gets.chop
+  
+  if line == "y" || line == "Y" then
+    break
+  elsif line == "n" then
+    p "The program was stopped."
+    exit
+  else
+    sleep 1
+    next
+  end
+end
+
+
 def set_location_info_to_exiftags (lat: , lng: , file: )
   photo = MiniExiftool.new file.to_s
   photo.gps_latitude = lat
