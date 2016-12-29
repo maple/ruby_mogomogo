@@ -3,15 +3,16 @@
 
 require "mini_exiftool"
 
-def set_orientation_to_exiftags (rt: , file: )
-  p file
-  photo = MiniExiftool.new file.to_s
-  #p photo.orientation
+def set_orientation_to_exiftags (rt: , fname: )
+  p fname
+  photo = MiniExiftool.new fname
+
+  p photo.orientation
   # GPSMapDatum
   
   begin
     # photo.save!
-    puts "done to rewrite exif timestamp : (#{file})"
+    puts "done to rewrite exif timestamp : (#{fname})"
   rescue => e
     puts e
   end
@@ -32,9 +33,9 @@ def create_filename_list (param)
 end
 
 
-photo = MiniExiftool.new "testfile".to_s
+#photo = MiniExiftool.new "testfile".to_s
 
-exit
+#exit
 
 # extension
 ext = ".jpg"
@@ -46,6 +47,6 @@ param_of_search = location + "/**/*" + ext
 filelist = create_filename_list param_of_search
 
 filelist.each { |f|
-  set_orientation_to_exiftags file: f, rt: "hoge"
+  set_orientation_to_exiftags fname: f, rt: "hoge"
   p f
 }
