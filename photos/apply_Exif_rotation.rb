@@ -3,12 +3,21 @@
 
 require "mini_exiftool"
 
+
 def set_orientation_to_exiftags (rt: , fname: )
   p fname
   photo = MiniExiftool.new fname
 
   p photo.orientation
   # GPSMapDatum
+  # photo.orientation ="Rotate 270 CW"
+  # photo.orientation ="Rotate 90 CW"
+  photo.orientation ="Rotate 180"
+
+  # check width / height
+  if photo.image_width > photo.image_height
+    
+  end
   
   begin
     # photo.save!
