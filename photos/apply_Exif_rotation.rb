@@ -3,7 +3,6 @@
 
 require "mini_exiftool"
 
-
 def set_orientation_to_exiftags (rt: , fname: )
   p fname
   photo = MiniExiftool.new fname
@@ -40,11 +39,6 @@ def create_filename_list (param)
   }
   return ar
 end
-
-
-#photo = MiniExiftool.new "testfile".to_s
-
-#exit
 
 # extension
 ext = ".jpg"
