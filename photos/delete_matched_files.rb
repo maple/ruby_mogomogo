@@ -1,7 +1,17 @@
 #!~/.rbenv/shims/ruby
-
+## Background
+# There are many pics in my storage and they are from several devices such as Digital Camera (include a mirrorless, a single-lens reflex camera), smart phones, tablets.
+# I'd like to delete some pics from Digital Camera to save my storage since these pics are already backed up on other storage (online).
+#
+# method
+# 1. check exif tags of a pic file, the field name is "model".
+# 2. if the model includes "Camera's name", delete the file.
+#
+# here is sample below, my camera is "Olympus E-PL5"
 
 require 'exifr'
+
+modelname = "E-PL5"
 
 def create_filename_list (param)
   ar = []
@@ -39,7 +49,7 @@ filelist.each { |f|
   modelinfo = get_info_fromExif name: f, tagname: "model"
   p modelinfo
   if modelinfo.instance_of?(String) then
-    if modelinfo.index("E-PL5") then
+    if modelinfo.index(modelname) then
       p "Digital camera photo is found."
       # delete files
       File.unlink f
